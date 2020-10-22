@@ -1,0 +1,24 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cron-get-news
+spec:
+  schedule: 0 */1 *  * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: get-news
+            image: openjdk:8u242-jdk
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/sh", "-c"]
+            args: ["java -jar /root/projects/TaiwanRailwayInfoUpdater.jar updateNews"]
+            volumeMounts:
+            - name: jar-dir
+              mountPath: /root/projects
+          restartPolicy: OnFailure
+          volumes:
+          - name: jar-dir
+            persistentVolumeClaim:
+              claimName: tra-pvc

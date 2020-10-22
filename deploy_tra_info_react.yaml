@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-tra-info-react
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tra-info-react
+  template:
+    metadata:
+      labels:
+        app: tra-info-react
+    spec:
+      containers:
+      - name: pod-tra-info-react
+        image: 192.168.58.132:5000/react-taiwanrailwayinfo:1
+        stdin: true
+        tty: true
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 60
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: regcred

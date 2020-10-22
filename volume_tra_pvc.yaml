@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tra-volume
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Delete
+  nfs:
+    server: 192.168.58.130
+    path: /var/nfsshare
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: tra-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi

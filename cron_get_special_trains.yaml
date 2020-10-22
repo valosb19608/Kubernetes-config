@@ -1,0 +1,24 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cron-specific-trains
+spec:
+  schedule: 0 1 *  * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: specific-trains-updater
+            image: openjdk:8u242-jdk
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/sh", "-c"]
+            args: ["java -jar /root/projects/TaiwanRailwayInfoUpdater.jar updateSpecificTrainsInfo"]
+            volumeMounts:
+            - name: jar-dir
+              mountPath: /root/projects
+          restartPolicy: OnFailure
+          volumes:
+          - name: jar-dir
+            persistentVolumeClaim:
+              claimName: tra-pvc
